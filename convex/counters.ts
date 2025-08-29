@@ -83,3 +83,30 @@ export const getRecentActivities = query({
       .take(10);
   },
 });
+
+// Reset counters (debug function)
+export const resetCounters = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const counter = await ctx.db
+      .query("counters")
+      .filter((q) => q.eq(q.field("type"), "global"))
+      .first();
+
+    if (counter) {
+      await ctx.db.patch(counter._id, {
+        dailyCount: 0,
+        totalCount: 0,
+        lastResetDate: new Date().toISOString().split('T')[0],
+      });
+    }
+
+    // Clear all activities
+    const activities = await ctx.db.query("activities").collect();
+    for (const activity of activities) {
+      await ctx.db.delete(activity._id);
+    }
+
+    return null;
+  },
+});

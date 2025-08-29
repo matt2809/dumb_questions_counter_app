@@ -1,8 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { authTables } from "@convex-dev/auth/server";
 
-const applicationTables = {
+export default defineSchema({
   counters: defineTable({
     type: v.literal("global"),
     dailyCount: v.number(),
@@ -10,18 +9,12 @@ const applicationTables = {
     lastResetDate: v.string(), // YYYY-MM-DD format
   }),
   userPresence: defineTable({
-    userId: v.id("users"),
     name: v.string(),
     lastSeen: v.number(),
-  }).index("by_user", ["userId"]),
+  }).index("by_name", ["name"]),
   activities: defineTable({
     userName: v.string(),
     action: v.string(),
     timestamp: v.number(),
   }).index("by_timestamp", ["timestamp"]),
-};
-
-export default defineSchema({
-  ...authTables,
-  ...applicationTables,
 });

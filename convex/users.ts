@@ -1,31 +1,36 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Update user presence
 export const updatePresence = mutation({
   args: {
     name: v.string(),
+    oldName: v.optional(v.string()), // Optional old name to clean up
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
-      throw new Error("User must be authenticated");
+    // If an old name is provided, remove the old presence record
+    if (args.oldName && args.oldName !== args.name) {
+      const oldPresence = await ctx.db
+        .query("userPresence")
+        .withIndex("by_name", (q) => q.eq("name", args.oldName!))
+        .first();
+      
+      if (oldPresence) {
+        await ctx.db.delete(oldPresence._id);
+      }
     }
 
     const existingPresence = await ctx.db
       .query("userPresence")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_name", (q) => q.eq("name", args.name))
       .first();
 
     if (existingPresence) {
       await ctx.db.patch(existingPresence._id, {
-        name: args.name,
         lastSeen: Date.now(),
       });
     } else {
       await ctx.db.insert("userPresence", {
-        userId,
         name: args.name,
         lastSeen: Date.now(),
       });
