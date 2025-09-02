@@ -69,7 +69,7 @@ Note down your Convex deployment URL (it will look like `https://your-deployment
    npm run build:cloudflare
    
    # Deploy to Cloudflare Pages
-   wrangler pages deploy dist --project-name dumb-questions-counter-app
+   wrangler deploy
    ```
 
 ## Step 3: Configure Custom Domain (Optional)

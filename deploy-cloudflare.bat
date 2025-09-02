@@ -23,6 +23,6 @@ echo 6. Add environment variable VITE_CONVEX_URL with your Convex URL
 echo 7. Deploy!
 echo.
 echo Or use Wrangler CLI:
-echo wrangler pages deploy dist --project-name dumb-questions-counter-app
+echo wrangler deploy
 echo.
 pause
