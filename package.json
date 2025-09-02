@@ -8,6 +8,8 @@
     "dev:frontend": "vite --open",
     "dev:backend": "convex dev",
     "build": "vite build",
+    "build:cloudflare": "vite build && cp _headers _redirects dist/",
+    "preview": "vite preview",
     "lint": "tsc -p convex -noEmit --pretty false && tsc -p . -noEmit --pretty false && convex dev --once && vite build"
   },
   "dependencies": {

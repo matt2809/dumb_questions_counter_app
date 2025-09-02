@@ -1,0 +1,16 @@
+name = "dumb-questions-counter-app"
+compatibility_date = "2024-01-15"
+
+[env.production]
+name = "dumb-questions-counter-app"
+
+# Build configuration for Cloudflare Pages
+[build]
+command = "npm run build"
+cwd = "."
+watch_dir = "src"
+
+# Pages configuration
+[[pages_builds]]
+source = "dist"
+destination = "."
